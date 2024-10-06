@@ -12,21 +12,33 @@ from django.views.generic import ListView, DetailView, TemplateView, CreateView,
 class ProductListView(ListView):
     model = Product
 
+    def get_context_data(self, *args, object_list=None, **kwargs):
+        context_data = super().get_context_data(**kwargs)
+        for product in context_data['object_list']:
+            active_version = Version.objects.filter(product=product, active=True).first()
+            product.active_version = active_version
+        return context_data
+
 
 class ProductDetailView(DetailView):
     model = Product
 
+    def get_object(self, queryset=None):
+        self.object = super().get_object(queryset)
+        self.object.views_counter += 1
+        self.object.save()
+        return self.object
 
 class ProductCreateView(CreateView):
     model = Product
     form_class = ProductForm
-    fields = ("name", "description", "photo", "category", "price", "created_at", "updated_at", "manufactured_at")
+    #fields = ("name", "description", "photo", "category", "price", "created_at", "updated_at", "manufactured_at")
     success_url = reverse_lazy('catalog:product_list')
 
 class ProductUpdateView(UpdateView):
     model = Product
     form_class = ProductForm
-    fields = ("name", "description", "photo", "category", "price", "created_at", "updated_at", "manufactured_at")
+    #fields = ("name", "description", "photo", "category", "price", "created_at", "updated_at", "manufactured_at")
     success_url = reverse_lazy('catalog:product_list')
 
     def get_success_url(self):
@@ -54,9 +66,7 @@ class ProductUpdateView(UpdateView):
 
 class ProductDeleteView(DeleteView):
     model = Product
-    success_url = reverse_lazy('catalog:products_list')
-
-
+    success_url = reverse_lazy('catalog:product_list')
 
 
 class ContactsTemplateView(TemplateView):
