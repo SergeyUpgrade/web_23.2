@@ -21,6 +21,14 @@
                 </ul>
                 <a class="btn btn-primary" href="{% url 'catalog:product_detail' product.pk %}" role="button">Посмотреть</a>
             </div>
+            <div class="card-footer">
+                      {% for version in product.versions.all %}
+                      {% if version.active %}
+                      <p>Версия: {{ version.version_num }} Название: {{ version.version_name }}</p>
+                      {% endif %}
+                      {% endfor %}
+            </div>
+            <small class="text-body-secondary"></small>
         </div>
     </div>
     {% endfor %}

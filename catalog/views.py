@@ -20,17 +20,15 @@ class ProductDetailView(DetailView):
 class ProductCreateView(CreateView):
     model = Product
     form_class = ProductForm
-    # fields = ("name", "description", "photo", "category", "price", "created_at", "updated_at", "manufactured_at")
-    success_url = reverse_lazy('catalog:products_list')
+    success_url = reverse_lazy('catalog:product_list')
 
 class ProductUpdateView(UpdateView):
     model = Product
     form_class = ProductForm
-    # fields = ("name", "description", "photo", "category", "price", "created_at", "updated_at", "manufactured_at")
-    success_url = reverse_lazy('catalog:products_list')
+    success_url = reverse_lazy('catalog:product_list')
 
     def get_success_url(self):
-        return reverse('catalog:products_detail', args=[self.kwargs.get('pk')])
+        return reverse('catalog:product_detail', args=[self.kwargs.get('pk')])
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
