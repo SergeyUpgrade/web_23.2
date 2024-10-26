@@ -7,6 +7,8 @@ from catalog.forms import ProductForm, VersionForm, ProductModeratorForm
 from catalog.models import Product, Version
 from django.views.generic import ListView, DetailView, TemplateView, CreateView, UpdateView, DeleteView
 
+from catalog.services import get_product_from_cache
+
 
 # Create your views here.
 
@@ -14,6 +16,8 @@ from django.views.generic import ListView, DetailView, TemplateView, CreateView,
 class ProductListView(ListView):
     model = Product
 
+    def get_queryset(self):
+        return get_product_from_cache()
     def get_context_data(self, *args, object_list=None, **kwargs):
         context_data = super().get_context_data(**kwargs)
         for product in context_data['object_list']:
